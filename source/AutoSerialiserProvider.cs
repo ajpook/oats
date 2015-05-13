@@ -80,6 +80,11 @@ namespace Oats
 			return typedSerialiser;
 		}
 
+        public Serialiser GetSerialiser (Guid uuid)
+        {
+            return serialiserCollection.GetSerialiser (uuid);
+        }
+
 		public Serialiser GetSerialiser (Type targetType)
 		{
 			String targetTypeKey = targetType.GetIdentifier();

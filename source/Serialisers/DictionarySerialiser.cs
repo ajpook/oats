@@ -42,6 +42,8 @@ namespace Oats
 	public class DictionarySerialiser<TKey, TValue>
 		: Serialiser<Dictionary<TKey, TValue>>
 	{
+        public DictionarySerialiser (): base ("ba757b7d-4054-4cef-915f-55cc3903de75") {}
+
 		public override Dictionary<TKey, TValue> Read (ISerialisationChannel sc)
 		{
 			Int32 count = sc.Read<Int32> ();

@@ -42,6 +42,7 @@ namespace Oats
 	{
 		Serialiser<TTarget> GetSerialiser<TTarget> ();
 		Serialiser GetSerialiser (Type targetype);
+        Serialiser GetSerialiser (Guid uuid);
 	}
 }
 

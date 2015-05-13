@@ -42,6 +42,8 @@ namespace Oats
 	public class StringSerialiser
 		: Serialiser<String>
 	{
+        public StringSerialiser (): base ("1b9fb938-ae9a-4da9-b46c-f23a518ec545") {}
+
 		public override String Read (ISerialisationChannel sc)
 		{
 			UInt32 length = sc.Read <UInt32> ();

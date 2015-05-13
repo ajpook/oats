@@ -41,6 +41,8 @@ namespace Oats
 	public class DecimalSerialiser
 		: Serialiser<Decimal>
 	{
+        public DecimalSerialiser (): base ("5febb6ad-c4e3-4d13-aef8-6e7203434009") {}
+
 		public override Decimal Read (ISerialisationChannel sc)
 		{
 			String str = sc.Read<String> ();

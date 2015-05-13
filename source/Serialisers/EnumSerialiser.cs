@@ -47,7 +47,7 @@ namespace Oats
 	{
 		Type underlyingType;
 
-		public EnumSerialiser () {
+		public EnumSerialiser (): base ("de52d654-b2d5-4d28-a614-d1e2230fd9ea") {
 
 			underlyingType = Enum.GetUnderlyingType(typeof(T));
 		}

@@ -46,8 +46,8 @@ namespace Oats
 	public class SerialiserCollection
 		: ISerialiserProvider 
 	{
-		// Target type to type serialiser implementation.
-		readonly Dictionary<String, Serialiser> collection = new Dictionary<String, Serialiser> ();
+        readonly Dictionary <Type, Guid> type2uuid = new Dictionary<Type, Guid> ();
+        readonly Dictionary <Guid, Serialiser> collection = new Dictionary<Guid, Serialiser> ();
 
 		public void AddSerialiser<TTarget>(Serialiser<TTarget> serialiser)
 		{
@@ -58,15 +58,28 @@ namespace Oats
 		{
 			Type targetype = serialiser.GetType ().BaseType.GetGenericArguments() [0];
 
-			String targetTypeKey = targetype.GetIdentifier ();
-
-			if (collection.ContainsKey (targetTypeKey))
+			if (type2uuid.ContainsKey (targetype))
 			{
 				throw new SerialisationException ("Already have serialiser for type: " + targetype);
 			}
 
-			collection [targetTypeKey] = serialiser;
+            type2uuid [targetype] = serialiser.UUID;
+			collection [serialiser.UUID] = serialiser;
+            Console.WriteLine (serialiser.UUID + " ~ " + targetype.FullName);
 		}
+
+#region ISerialiserProvider
+
+        public Serialiser GetSerialiser (Guid uuid)
+        {
+            if (!collection.ContainsKey (uuid))
+            {
+                throw new Exception (
+                    "Collection does not contain a Serialiser with uuid:" + uuid + ".");
+            }
+
+            return collection [uuid];
+        }
 
 		public Serialiser<TTarget> GetSerialiser<TTarget>()
 		{
@@ -75,18 +88,18 @@ namespace Oats
 			return typedSerialiser;
 		}
 
-		public Serialiser GetSerialiser(Type targetype)
+		public Serialiser GetSerialiser (Type targetype)
 		{
-			String targetTypeKey = targetype.GetIdentifier ();
-
-			if (!collection.ContainsKey (targetTypeKey))
+			if (!type2uuid.ContainsKey (targetype))
 			{
 				throw new Exception (
 					"Collection does not contain a Serialiser for type " + targetype + ".");
 			}
 
-			return collection [targetTypeKey];
+			return collection [type2uuid[targetype]];
 		}
+
+#endregion
 	}
 }
 

@@ -42,6 +42,8 @@ namespace Oats.Tests
 	public class FooSerialiser
 		: Serialiser<Foo>
 	{
+        public FooSerialiser (): base ("8444efbb-9b76-42aa-b22b-42b4b4eb6f73") {}
+
 		public override Foo Read (ISerialisationChannel ss)
 		{
 			var f = new Foo ();
@@ -60,6 +62,8 @@ namespace Oats.Tests
 	public class BarSerialiser
 		: Serialiser<Bar>
 	{
+        public BarSerialiser (): base ("5684f18c-5264-4e35-9768-b79b728aae1b") {}
+
 		public override Bar Read (ISerialisationChannel ss)
 		{
 			var f = ss.Read <Foo> ();
@@ -78,6 +82,8 @@ namespace Oats.Tests
 	public class ColourSerialiser
 		: Serialiser<Colour>
 	{
+        public ColourSerialiser (): base ("5092c984-6b30-4084-b398-1b32f160f47a") {}
+
 		public override Colour Read (ISerialisationChannel ss)
 		{
 			var c = new Colour ();
@@ -100,6 +106,8 @@ namespace Oats.Tests
 	public class ReadmeExampleSerialiser
 		: Serialiser<ReadmeExample>
 	{
+        public ReadmeExampleSerialiser (): base ("768bcf9f-73ff-4a1c-8213-10997343046a") {}
+
 		public override ReadmeExample Read (ISerialisationChannel ss)
 		{
 			var rme = new ReadmeExample ();
@@ -120,6 +128,8 @@ namespace Oats.Tests
 	public class AnimalSerialiser
 		: Serialiser<Animal>
 	{
+        public AnimalSerialiser (): base ("0352fa1c-fec0-4e16-8c5f-6609f046b3b7") {}
+
 		public override Animal Read (ISerialisationChannel ss)
 		{
 			var animal = new Animal ();
@@ -136,6 +146,8 @@ namespace Oats.Tests
 	public class MammelSerialiser
 		: Serialiser<Mammel>
 	{
+        public MammelSerialiser (): base ("badae9cb-47f9-4cbc-971f-0ce2b2ab0999") {}
+
 		public override Mammel Read (ISerialisationChannel ss)
 		{
 			var mammel = new Mammel ();
@@ -154,6 +166,8 @@ namespace Oats.Tests
 	public class BoarSerialiser
 		: Serialiser<Boar>
 	{
+        public BoarSerialiser (): base ("647f5a51-18d7-474e-8975-2de97f744476") {}
+
 		public override Boar Read (ISerialisationChannel ss)
 		{
 			var boar = new Boar ();
@@ -174,6 +188,8 @@ namespace Oats.Tests
 	public class BearSerialiser
 		: Serialiser<Bear>
 	{
+        public BearSerialiser (): base ("f01d6aa5-58a5-416e-a675-6394da5a8b59") {}
+
 		public override Bear Read (ISerialisationChannel ss)
 		{
 			var bear = new Bear ();
@@ -194,6 +210,8 @@ namespace Oats.Tests
 	public class ShaderSamplerDefinitionSerialiser
 		: Serialiser<ShaderSamplerDefinition>
 	{
+        public ShaderSamplerDefinitionSerialiser (): base ("53a60c83-7ffa-43b2-83e8-ed92c499d56b") {}
+
 		public override ShaderSamplerDefinition Read (ISerialisationChannel ss)
 		{
 			var ssd = new ShaderSamplerDefinition ();

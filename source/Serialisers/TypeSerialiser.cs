@@ -38,24 +38,36 @@ using System;
 
 namespace Oats
 {
+    // Originally when serialising a `Type` object this Oats serialiser 
+    // simply read/wrote the Type's fully qualified .NET name, this don't 
+    // really mean much on other platforms, so to make Oats platform 
+    // agnostic this serialiser now reads/writes the UUID of the serialiser
+    // register for actually serialising that type.
+    // This does come with the drawback that Type objects can only be
+    // serialised by this serialiser if the type they represent also has
+    // a registered serialiser.
 	public class TypeSerialiser
 		: Serialiser<Type>
 	{
+        public TypeSerialiser (): base ("d4e166e4-d493-42a9-97ff-c3fac77e8135") {}
+
 		public override Type Read (ISerialisationChannel sc)
 		{
-			String typeName = sc.Read <String> ();
-			Type t = Type.GetType (typeName);
+            var uuidBytes = sc.Read <Byte[]> ();
+            var serialiserUUID = new Guid (uuidBytes);
+			Type type = sc.SerialiserProvider.GetSerialiser (serialiserUUID).TargetType;
 
-            if (t == null)
-                throw new Exception ("Unknown type: " + typeName);
+            if (type == null)
+                throw new Exception ("Unknown type: " + serialiserUUID);
 
-			return t;
+			return type;
 		}
 
-		public override void Write (ISerialisationChannel sc, Type t)
+		public override void Write (ISerialisationChannel sc, Type type)
 		{
-            String typeName = t.FullName + ", " + t.Assembly.GetName ();
-			sc.Write(typeName);
+            var serialiserUUID = sc.SerialiserProvider.GetSerialiser (type).UUID;
+            var uuidBytes = serialiserUUID.ToByteArray ();
+            sc.Write <Byte[]> (uuidBytes);
 		}
 	}
 }

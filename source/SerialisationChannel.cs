@@ -52,6 +52,7 @@ namespace Oats
 		readonly ChannelMode mode;
 
 		public ChannelMode Mode { get { return mode; } }
+        public ISerialiserProvider SerialiserProvider { get { return serialiserProvider; } }
 	
 		public SerialisationChannel (
 			Stream stream,

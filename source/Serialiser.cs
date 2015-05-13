@@ -41,15 +41,15 @@ namespace Oats
 	public abstract class Serialiser
 	{
 		readonly Type targetType;
+        readonly Guid identifier;
 
-		public Type TargetType
-		{
-			get { return this.targetType; }
-		}
+		public Type TargetType { get { return this.targetType; } }
+        public Guid UUID { get { return this.identifier; } }
 
-		protected Serialiser(Type targetType)
+        protected Serialiser(Type targetType, Guid identifier)
 		{
 			this.targetType = targetType;
+            this.identifier = identifier;
 		}
 
 		public abstract Object ReadObject (ISerialisationChannel sc);
@@ -60,10 +60,15 @@ namespace Oats
 	public abstract class Serialiser<T>
 		: Serialiser
 	{
-		protected Serialiser()
-			: base(typeof(T))
+        protected Serialiser(String identifier)
+			: base(typeof(T), Guid.Parse (identifier))
 		{
 		}
+
+        protected Serialiser(Guid identifier)
+            : base(typeof(T), identifier)
+        {
+        }
 
 		public override Object ReadObject (ISerialisationChannel sc)
 		{

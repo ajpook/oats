@@ -43,6 +43,8 @@ namespace Oats
 		where T
 		: struct
 	{
+        public NullableSerialiser (): base ("6af25411-2e6b-49d7-9c2c-4475ebdf9d54") {}
+
 		public override T? Read (ISerialisationChannel sc)
 		{
 			if(sc.Read <Boolean> ())
