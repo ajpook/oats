@@ -38,11 +38,16 @@ using System;
 
 namespace Oats
 {
-	public interface ISerialiserProvider
+    public interface ISerialiserProvider: ISerialiserInfo
 	{
 		Serialiser<TTarget> GetSerialiser<TTarget> ();
-		Serialiser GetSerialiser (Type targetype);
-        Serialiser GetSerialiser (Guid uuid);
+		Serialiser GetSerialiser (Type targetType);
 	}
+
+    public interface ISerialiserInfo
+    {
+        SerialiserInfo GetSerialiserInfo (Guid serialiserUUID);
+        SerialiserInfo GetSerialiserInfo (Type targetType);
+    }
 }
 

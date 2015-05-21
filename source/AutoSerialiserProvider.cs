@@ -43,35 +43,48 @@ namespace Oats
 	public class AutoSerialiserProvider
 		: ISerialiserProvider
 	{
-		readonly SerialiserCollection serialiserCollection;
-		readonly Dictionary <String, Boolean> autoAddAttempts;
-		readonly Dictionary <String, Type> basicSerialiserTypes;
-		readonly Dictionary <String, Type> genericSerialiserTypes;
+        readonly SerialiserCollection serialiserCollection = new SerialiserCollection ();
+
+        readonly Dictionary <String, Boolean> autoAddAttempts = new Dictionary <String, Boolean> ();
+
+        readonly Dictionary <Guid, String> basicSerialiserTypesU = new Dictionary <Guid, String> ();
+        readonly Dictionary <String, SerialiserInfo> basicSerialiserTypesT = new Dictionary <String, SerialiserInfo> ();
+
+        readonly Dictionary <Guid, String> genericSerialiserTypesU = new Dictionary <Guid, String> ();
+        readonly Dictionary <String, SerialiserInfo> genericSerialiserTypesT = new Dictionary <String, SerialiserInfo> ();
 
 		public AutoSerialiserProvider ()
 		{
-			this.serialiserCollection = new SerialiserCollection ();
-			this.autoAddAttempts = new Dictionary <String, Boolean> ();
-			this.basicSerialiserTypes = new Dictionary<String, Type> ();
-			this.genericSerialiserTypes = new Dictionary<String, Type> ();
+			var searchResult = SerialiserFinder.Search ();
 
-			var searchResult = SerialiserTypeFinder.Search ();
-
-			foreach (Type serialiserType in searchResult.SerialiserTypes)
+			foreach (var serialiserInfo in searchResult.SerialiserInfos)
 			{
-				Type targetType = serialiserType.BaseType.GetGenericArguments ()[0];
-
-				String targetTypeKey = targetType.GetIdentifier();
-				if (serialiserType.IsGenericType)
-				{
-					genericSerialiserTypes.Add (targetTypeKey, serialiserType);
+                if (serialiserInfo.SerialiserType.IsGenericType)
+                {
+                    genericSerialiserTypesU.Add (serialiserInfo.SerialiserUUID, serialiserInfo.TargetType.GetIdentifier ());
+                    genericSerialiserTypesT.Add (serialiserInfo.TargetType.GetIdentifier (), serialiserInfo);
 				}
 				else
-				{
-					basicSerialiserTypes.Add (targetTypeKey, serialiserType);
+                {
+                    basicSerialiserTypesU.Add (serialiserInfo.SerialiserUUID, serialiserInfo.TargetType.GetIdentifier ());
+                    basicSerialiserTypesT.Add (serialiserInfo.TargetType.GetIdentifier (), serialiserInfo);
 				}
 			}
 		}
+
+        public SerialiserInfo GetSerialiserInfo (Guid serialiserUUID)
+        {
+            if (basicSerialiserTypesU.ContainsKey (serialiserUUID)) return basicSerialiserTypesT[basicSerialiserTypesU [serialiserUUID]];
+            if (genericSerialiserTypesU.ContainsKey (serialiserUUID)) return genericSerialiserTypesT[genericSerialiserTypesU [serialiserUUID]];
+            throw new SerialisationException ("");
+        }
+
+        public SerialiserInfo GetSerialiserInfo (Type targetType)
+        {
+            if (basicSerialiserTypesT.ContainsKey (targetType.GetIdentifier ())) return basicSerialiserTypesT [targetType.GetIdentifier ()];
+            if (genericSerialiserTypesT.ContainsKey (targetType.GetIdentifier ())) return genericSerialiserTypesT [targetType.GetIdentifier ()];
+            throw new SerialisationException ("");
+        }
 
 		public Serialiser<TTarget> GetSerialiser<TTarget>()
 		{
@@ -82,21 +95,29 @@ namespace Oats
 
         public Serialiser GetSerialiser (Guid uuid)
         {
-            return serialiserCollection.GetSerialiser (uuid);
+            if (basicSerialiserTypesU.ContainsKey (uuid)) return GetSerialiser (Type.GetType (basicSerialiserTypesU [uuid]));
+            if (genericSerialiserTypesU.ContainsKey (uuid)) return GetSerialiser (Type.GetType (genericSerialiserTypesU [uuid]));
+
+            throw new SerialisationException ("");
         }
 
 		public Serialiser GetSerialiser (Type targetType)
 		{
-			String targetTypeKey = targetType.GetIdentifier();
+            Console.WriteLine ("Get Serialiser: " + targetType);
 
-			if (!autoAddAttempts.ContainsKey (targetTypeKey))
+            if (!autoAddAttempts.ContainsKey (targetType.GetIdentifier ()))
 			{
 				Boolean ok = TryAdd (targetType);
 
-				autoAddAttempts [targetTypeKey] = ok;
+                if (!ok)
+                {
+                    throw new SerialisationException ("");
+                }
+
+                autoAddAttempts [targetType.GetIdentifier ()] = true;
 			}
 
-			if (autoAddAttempts [targetTypeKey])
+            if (autoAddAttempts [targetType.GetIdentifier ()])
 			{
 				return serialiserCollection.GetSerialiser (targetType);
 			}
@@ -121,9 +142,12 @@ namespace Oats
 			{
 				Type gt = targetType.GetGenericTypeDefinition ();
 
-				String gtKey = gt.GetIdentifier ();
+                if (!genericSerialiserTypesT.ContainsKey (gt.GetIdentifier ()))
+                {
+                    throw new Exception ();
+                }
 
-				Type unboundSerialiserType = genericSerialiserTypes [gtKey];
+                Type unboundSerialiserType = genericSerialiserTypesT [gt.GetIdentifier ()].SerialiserType;
 
 				Type t = targetType.GetGenericArguments () [0];
 
@@ -131,9 +155,7 @@ namespace Oats
 			}
 			else
 			{
-				String targetTypeKey = targetType.GetIdentifier ();
-
-				serialiserType = basicSerialiserTypes [targetTypeKey];
+                serialiserType = basicSerialiserTypesT [targetType.GetIdentifier ()].SerialiserType;
 			}
 
 			Serialiser serialiserInstance = null;
@@ -158,8 +180,9 @@ namespace Oats
 				Add (targetType);
 				return true;
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
+                Console.WriteLine (ex.GetType () + " " + ex.Message);
 				return false;
 			}
 		}

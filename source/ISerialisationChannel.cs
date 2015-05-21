@@ -43,7 +43,7 @@ namespace Oats
 	{
 		ChannelMode Mode { get; }
 
-        ISerialiserProvider SerialiserProvider { get; }
+        ISerialiserInfo SerialiserInfo { get; }
 
 		void 		WriteReflective 	(Type type, Object value);
 		void 		Write 		<T> 	(T value);

@@ -49,6 +49,16 @@ namespace Oats
         readonly Dictionary <Type, Guid> type2uuid = new Dictionary<Type, Guid> ();
         readonly Dictionary <Guid, Serialiser> collection = new Dictionary<Guid, Serialiser> ();
 
+        static int id = 0;
+        int myid;
+
+        public SerialiserCollection ()
+        {
+            id = id + 1;
+            myid = id;
+            Console.WriteLine ("\nSerialiserCollection #" + myid);
+        }
+
 		public void AddSerialiser<TTarget>(Serialiser<TTarget> serialiser)
 		{
 			AddSerialiser (serialiser);
@@ -56,16 +66,17 @@ namespace Oats
 
 		public void AddSerialiser(Serialiser serialiser)
 		{
-			Type targetype = serialiser.GetType ().BaseType.GetGenericArguments() [0];
+            Type targetType = serialiser.Info.TargetType;
 
-			if (type2uuid.ContainsKey (targetype))
+            if (type2uuid.ContainsKey (targetType))
 			{
-				throw new SerialisationException ("Already have serialiser for type: " + targetype);
+                throw new SerialisationException ("Already have serialiser for type: " + targetType);
 			}
 
-            type2uuid [targetype] = serialiser.UUID;
+            Console.WriteLine ("SerialiserCollection #" + myid + " AddSerialiser: " + serialiser.UUID + ", targetType: " + targetType);
+
+            type2uuid [targetType] = serialiser.UUID;
 			collection [serialiser.UUID] = serialiser;
-            Console.WriteLine (serialiser.UUID + " ~ " + targetype.FullName);
 		}
 
 #region ISerialiserProvider
@@ -78,6 +89,8 @@ namespace Oats
                     "Collection does not contain a Serialiser with uuid:" + uuid + ".");
             }
 
+            Console.WriteLine ("SerialiserCollection #" + myid + " GetSerialiser: " + uuid);
+
             return collection [uuid];
         }
 
@@ -88,17 +101,38 @@ namespace Oats
 			return typedSerialiser;
 		}
 
-		public Serialiser GetSerialiser (Type targetype)
+        public Serialiser GetSerialiser (Type targetType)
 		{
-			if (!type2uuid.ContainsKey (targetype))
+            if (!type2uuid.ContainsKey (targetType))
 			{
 				throw new Exception (
-					"Collection does not contain a Serialiser for type " + targetype + ".");
+                    "Collection does not contain a Serialiser for type " + targetType + ".");
 			}
 
-			return collection [type2uuid[targetype]];
+            return collection [type2uuid[targetType]];
 		}
 
+#endregion
+
+#region ISerialiserInfo
+
+        public SerialiserInfo GetSerialiserInfo (Guid serialiserUUID)
+        {
+            if (collection.ContainsKey (serialiserUUID))
+                return collection [serialiserUUID].Info;
+            
+            throw new Exception (
+                "Collection does not contain a Serialiser with uuid:" + serialiserUUID + ".");
+        }
+
+        public SerialiserInfo GetSerialiserInfo (Type targetType)
+        {
+            if (type2uuid.ContainsKey (targetType))
+                return collection [type2uuid [targetType]].Info;
+            
+            throw new Exception (
+                "Collection does not contain a Serialiser for type " + targetType + ".");
+        }
 #endregion
 	}
 }

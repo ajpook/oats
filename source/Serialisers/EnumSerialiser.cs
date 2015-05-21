@@ -41,14 +41,15 @@ namespace Oats
 	// EnumSerialiser<T>
 	// test
 	// enum Foo : long { One, Two };
-	// enum Bar : byte { x = 255 };
+    // enum Bar : byte { x = 255 };
+    [SerialiserUUID ("de52d654-b2d5-4d28-a614-d1e2230fd9ea")]
 	public class EnumSerialiser<T>
 		: Serialiser<T>
 	{
 		Type underlyingType;
 
-		public EnumSerialiser (): base ("de52d654-b2d5-4d28-a614-d1e2230fd9ea") {
-
+		public EnumSerialiser ()
+        {
 			underlyingType = Enum.GetUnderlyingType(typeof(T));
 		}
 

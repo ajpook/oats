@@ -7,6 +7,8 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Oats.Tests</RootNamespace>
     <AssemblyName>Oats.Tests</AssemblyName>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -51,9 +53,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Oats\Oats %28xs.mono40%29.csproj">
+    <ProjectReference Include="..\Oats\Oats %28xamarin_studio.mono40%29.csproj">
       <Project>{44DD7EF6-AB42-48A3-88CA-0B1107F5F126}</Project>
-      <Name>Oats (xs.mono40)</Name>
+      <Name>Oats (xamarin_studio.mono40)</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

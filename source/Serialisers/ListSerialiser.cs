@@ -39,11 +39,10 @@ using System.Collections.Generic;
 
 namespace Oats
 {
+    [SerialiserUUID ("fa4c192b-9df5-4e81-b467-4ea3f9ab8522")]
 	public class ListSerialiser<T>
 		: Serialiser<List<T>>
 	{
-        public ListSerialiser (): base ("fa4c192b-9df5-4e81-b467-4ea3f9ab8522") {}
-
 		public override List<T> Read (ISerialisationChannel sc)
 		{
 			Int32 count = sc.Read<Int32> ();

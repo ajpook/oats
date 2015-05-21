@@ -35,40 +35,79 @@
 // └────────────────────────────────────────────────────────────────────────┘ \\
 
 using System;
+using System.Linq;
 
 namespace Oats
 {
+    public class SerialiserInfo
+    {
+        public Type SerialiserType { get; set; }
+        public Guid SerialiserUUID { get; set; }
+        public Type TargetType { get; set; }
+    }
+
+    public class SerialiserUUIDAttribute : Attribute
+    {
+        readonly Guid uuid;
+
+        public Guid UUID { get { return uuid; } }
+
+        public SerialiserUUIDAttribute (String uuidString)
+        {
+            this.uuid = Guid.Parse (uuidString);
+        }
+
+        public SerialiserUUIDAttribute (Guid uuid)
+        {
+            this.uuid = uuid;
+        }
+    }
+
 	public abstract class Serialiser
-	{
-		readonly Type targetType;
-        readonly Guid identifier;
+    {
+        readonly SerialiserInfo info;
 
-		public Type TargetType { get { return this.targetType; } }
-        public Guid UUID { get { return this.identifier; } }
+        public Type TargetType { get { return info.TargetType; } }
 
-        protected Serialiser(Type targetType, Guid identifier)
+        public Guid UUID { get { return info.SerialiserUUID; } }
+
+        public SerialiserInfo Info { get { return info; } }
+
+        protected Serialiser(Type targetType)
 		{
-			this.targetType = targetType;
-            this.identifier = identifier;
+            var t = GetType ();
+            this.info = new SerialiserInfo {
+                SerialiserType = t,
+                SerialiserUUID = GetUUID (t),
+                TargetType = targetType
+            };
 		}
 
 		public abstract Object ReadObject (ISerialisationChannel sc);
 
 		public abstract void WriteObject (ISerialisationChannel sc, Object obj);
+
+        public static Guid GetUUID (Type t)
+        {
+            var attribute = t
+                .GetCustomAttributes (typeof(SerialiserUUIDAttribute), true)
+                .FirstOrDefault() as SerialiserUUIDAttribute;
+
+            if (attribute != null)
+            {
+                return attribute.UUID;
+            }
+            else
+            {
+                throw new Exception ("Serialiser must have SerialiserUUID Attribute");
+            }
+        }
 	}
 
 	public abstract class Serialiser<T>
 		: Serialiser
 	{
-        protected Serialiser(String identifier)
-			: base(typeof(T), Guid.Parse (identifier))
-		{
-		}
-
-        protected Serialiser(Guid identifier)
-            : base(typeof(T), identifier)
-        {
-        }
+        protected Serialiser (): base(typeof(T)) {}
 
 		public override Object ReadObject (ISerialisationChannel sc)
 		{

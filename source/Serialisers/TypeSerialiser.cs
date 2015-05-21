@@ -46,16 +46,19 @@ namespace Oats
     // This does come with the drawback that Type objects can only be
     // serialised by this serialiser if the type they represent also has
     // a registered serialiser.
+    [SerialiserUUID ("d4e166e4-d493-42a9-97ff-c3fac77e8135")]
 	public class TypeSerialiser
 		: Serialiser<Type>
 	{
-        public TypeSerialiser (): base ("d4e166e4-d493-42a9-97ff-c3fac77e8135") {}
-
 		public override Type Read (ISerialisationChannel sc)
 		{
-            var uuidBytes = sc.Read <Byte[]> ();
+            var uuidBytes = new Byte [16];
+
+            for (uint i = 0; i < 16; ++i)
+                uuidBytes [i] = sc.Read <Byte> ();
+
             var serialiserUUID = new Guid (uuidBytes);
-			Type type = sc.SerialiserProvider.GetSerialiser (serialiserUUID).TargetType;
+            Type type = sc.SerialiserInfo.GetSerialiserInfo (serialiserUUID).TargetType;
 
             if (type == null)
                 throw new Exception ("Unknown type: " + serialiserUUID);
@@ -65,9 +68,11 @@ namespace Oats
 
 		public override void Write (ISerialisationChannel sc, Type type)
 		{
-            var serialiserUUID = sc.SerialiserProvider.GetSerialiser (type).UUID;
+            var serialiserUUID = sc.SerialiserInfo.GetSerialiserInfo (type).SerialiserUUID;
             var uuidBytes = serialiserUUID.ToByteArray ();
-            sc.Write <Byte[]> (uuidBytes);
+
+            for (uint i = 0; i < 16; ++i)
+                sc.Write <Byte> (uuidBytes [i]);
 		}
 	}
 }

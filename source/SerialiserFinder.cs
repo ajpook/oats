@@ -47,11 +47,11 @@ namespace Oats
 	/// This class provides a mechanism for finding implementations
 	/// of Oats.Serialiser<> at runtime.
 	/// </summary>
-	public static class SerialiserTypeFinder
+	public static class SerialiserFinder
 	{
 		public class SearchResult
 		{
-			public Type[] SerialiserTypes { get; set; }
+            public SerialiserInfo[] SerialiserInfos { get; set; }
 		}
 
 		/// <summary>
@@ -60,7 +60,7 @@ namespace Oats
 		/// </summary>
 		public static SearchResult Search ()
 		{
-			List <Type> serialiserTypes = new List<Type> ();
+            List <SerialiserInfo> serialiserInfos = new List<SerialiserInfo> ();
 
 			Assembly[] assemblies = AppDomain.CurrentDomain
 				.GetAssemblies ()
@@ -74,12 +74,12 @@ namespace Oats
 			foreach (var assembly in assemblies)
 			{
 				SearchResult sr = Search (assembly);
-				serialiserTypes.AddRange (sr.SerialiserTypes);
+                serialiserInfos.AddRange (sr.SerialiserInfos);
 			}
 
 			var result = new SearchResult ()
 			{
-				SerialiserTypes = serialiserTypes.ToArray ()
+                SerialiserInfos = serialiserInfos.ToArray ()
 			};
 
 			return result;
@@ -89,14 +89,19 @@ namespace Oats
 		{
 			var assemblyTypes = assembly.GetTypes ();
 
-			var serialiserTypes = assemblyTypes
+            var serialiserInfos = assemblyTypes
 				.Where (x => !x.IsAbstract)
 				.Where (x => (x.BaseType != null) && x.BaseType.BaseType == typeof (Serialiser))
+                .Select (t =>
+                    new SerialiserInfo {
+                        SerialiserType = t,
+                        SerialiserUUID = Serialiser.GetUUID (t),
+                        TargetType = t.BaseType.GetGenericArguments ()[0] })
 				.ToList ();
 
 			var result = new SearchResult ()
 			{
-				SerialiserTypes = serialiserTypes.ToArray ()
+                SerialiserInfos = serialiserInfos.ToArray ()
 			};
 
 			return result;

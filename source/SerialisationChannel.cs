@@ -52,7 +52,7 @@ namespace Oats
 		readonly ChannelMode mode;
 
 		public ChannelMode Mode { get { return mode; } }
-        public ISerialiserProvider SerialiserProvider { get { return serialiserProvider; } }
+        public ISerialiserInfo SerialiserInfo { get { return serialiserProvider; } }
 	
 		public SerialisationChannel (
 			Stream stream,
@@ -204,9 +204,7 @@ namespace Oats
 				}
 				catch (Exception)
 				{
-					throw new SerialisationException (
-						"Failed to get serialiser for type: " + 
-						typeof (T) );
+					throw new SerialisationException ("Failed to get serialiser for type: " + typeof (T) );
 				}
 
 				T result = serialiser.Read (this);

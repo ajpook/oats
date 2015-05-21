@@ -38,11 +38,10 @@ using System;
 
 namespace Oats
 {
+    [SerialiserUUID ("e495c0c1-ae09-495c-8040-2c968760cf85")]
 	public class TimeSpanSerialiser
 		: Serialiser<TimeSpan>
 	{
-        public TimeSpanSerialiser (): base ("e495c0c1-ae09-495c-8040-2c968760cf85") {}
-
 		public override TimeSpan Read  (ISerialisationChannel sc)
 		{
 			Int64 ticks = sc.Read <Int64> ();

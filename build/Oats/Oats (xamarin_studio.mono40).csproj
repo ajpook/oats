@@ -7,6 +7,8 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Oats</RootNamespace>
     <AssemblyName>Oats</AssemblyName>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -92,8 +94,8 @@
     <Compile Include="..\..\source\SerialiserActivator.cs">
       <Link>Source\SerialiserActivator.cs</Link>
     </Compile>
-    <Compile Include="..\..\source\SerialiserTypeFinder.cs">
-      <Link>Source\SerialiserTypeFinder.cs</Link>
+    <Compile Include="..\..\source\SerialiserFinder.cs">
+      <Link>Source\SerialiserFinder.cs</Link>
     </Compile>
     <Compile Include="..\..\source\ChannelMode.cs">
       <Link>Source\ChannelMode.cs</Link>

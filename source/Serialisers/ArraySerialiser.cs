@@ -38,11 +38,10 @@ using System;
 
 namespace Oats
 {
+    [SerialiserUUID ("bd8041f5-2367-47f1-93a9-c89ac1302208")]
 	public class ArraySerialiser<T>
 		: Serialiser<T[]>
 	{
-        public ArraySerialiser (): base ("bd8041f5-2367-47f1-93a9-c89ac1302208") {}
-
 		public override T[] Read (ISerialisationChannel sc)
 		{
 			Int32 count = sc.Read<Int32> ();
