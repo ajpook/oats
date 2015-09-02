@@ -1,6 +1,6 @@
 # Oats
 
-[![Build Status](https://travis-ci.org/blimey3D/oats.png?branch=master)](https://travis-ci.org/blimey3D/oats)
+[![Build Status](https://travis-ci.org/sungiant/oats.png?branch=master)](https://travis-ci.org/sungiant/oats)
 
 Oats is an explicit serialisation library for the CLR.
 
