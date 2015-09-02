@@ -1,10 +1,7 @@
 # Oats
-
-[![Build Status](https://travis-ci.org/sungiant/oats.png?branch=master)](https://travis-ci.org/sungiant/oats)
-
 Oats is an explicit serialisation library for the CLR.
 
-
+[![Build Status](https://travis-ci.org/sungiant/oats.png?branch=master)](https://travis-ci.org/sungiant/oats)
 
 ## Using Oats
 
