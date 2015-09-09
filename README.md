@@ -1,4 +1,6 @@
 # Oats
+
+[![Join the chat at https://gitter.im/sungiant/oats](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/sungiant/oats?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 Oats is an explicit serialisation library for the CLR.
 
 [![Build Status](https://travis-ci.org/sungiant/oats.png?branch=master)](https://travis-ci.org/sungiant/oats)
