@@ -8,7 +8,7 @@
 
 ## Overview
 
-Oats is an explicit serialisation library for the CLR.
+Oats is an explicit serialisation library for .NET and Mono.
 
 ## Why?
 
@@ -189,7 +189,7 @@ And we can ask Oats to deserialise the binary back to an object:
 
 ## License
 
-Abacus is licensed under the **[MIT License][mit]**; you may not use this software except in compliance with the License.
+Oats is licensed under the **[MIT License][mit]**; you may not use this software except in compliance with the License.
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
