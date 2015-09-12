@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>Oats</id>
+    <title>Oats</title>
+    <version>0.9.0</version>
+    <authors>Ash Pook</authors>
+    <owners>Ash Pook</owners>
+    <licenseUrl>https://raw.githubusercontent.com/sungiant/oats/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/sungiant/oats</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Explicit serialisation library.</description>
+    <copyright>Copyright 2015</copyright>
+    <tags>Binary Serialisation</tags>
+  </metadata>
+  <files>
+    <file src="bin/oats.dll" target="lib" />
+    <file src="bin/oats.xml" target="lib" />
+  </files>
+</package>

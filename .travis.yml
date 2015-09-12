@@ -1,15 +1,10 @@
-before_install:
-    sudo apt-get -y update;
-
-install:
-    sudo apt-get -y install mono-complete;
-
+language: csharp
+sudo: false
+mono:
+  - latest
 before_script:
-    cd scripts;
-
+  - sh nu.sh
 script:
-    sh build.sh;
-    sh test.sh;
+  - sh build.sh
+  - sh test.sh
 
-after_script:
-    cd ../;

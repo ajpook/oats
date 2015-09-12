@@ -1,7 +1,30 @@
-# Oats
-Oats is an explicit serialisation library for the CLR.
+## Oats
 
 [![Build Status](https://travis-ci.org/sungiant/oats.png?branch=master)](https://travis-ci.org/sungiant/oats)
+[![Gitter](https://img.shields.io/badge/gitter-join%20chat-green.svg)](https://gitter.im/sungiant/oats?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/sungiant/oats/master/LICENSE)
+[![Nuget Version](https://img.shields.io/nuget/v/Oats.svg)](https://www.nuget.org/packages/Oats)
+[![Nuget Downloads](https://img.shields.io/nuget/dt/Oats.svg)](https://www.nuget.org/packages/Oats)
+
+## Overview
+
+Oats is an explicit serialisation library for the CLR.
+
+## Why?
+
+...
+
+## Getting Started
+
+Oats is available as a stand-alone library via **[nuget][oats_nuget]**.  Here's an example nuget `packages.config` file that pulls in Oats:
+
+```
+<?xml version="1.0" encoding="utf-8"?>
+<packages>
+  <package id="Oats" version="0.9.2" targetFramework="net45" />
+</packages>
+```
+
 
 ## Using Oats
 
@@ -161,3 +184,19 @@ Now that we have explicitly defined how we want our types to be serialised we ca
 And we can ask Oats to deserialise the binary back to an object:
 
     Example a = bytes.FromBinary <Example> ();
+
+
+
+## License
+
+Abacus is licensed under the **[MIT License][mit]**; you may not use this software except in compliance with the License.
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+[mit]: https://raw.githubusercontent.com/sungiant/oats/master/LICENSE
+[oats_nuget]: https://www.nuget.org/packages/Abacus/
+[sources]: https://github.com/sungiant/oats/tree/master/source/oats/src/main/cs
