@@ -10,10 +10,6 @@
 
 Oats is an explicit serialisation library for .NET and Mono.
 
-## Why?
-
-...
-
 ## Getting Started
 
 Oats is available as a stand-alone library via **[nuget][oats_nuget]**.  Here's an example nuget `packages.config` file that pulls in Oats:
@@ -24,6 +20,10 @@ Oats is available as a stand-alone library via **[nuget][oats_nuget]**.  Here's 
   <package id="Oats" version="0.9.2" targetFramework="net45" />
 </packages>
 ```
+
+## Why?
+
+...
 
 
 ## Using Oats
