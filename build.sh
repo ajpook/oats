@@ -1,11 +1,23 @@
 #!/bin/bash
 
-set -x #echo on
+set -x
 
 rm -rf bin/
 mkdir bin/
 
-cp packages/NUnit.2.6.4/lib/nunit.framework.dll bin/
+cp packages/NUnit.*/lib/nunit.framework.dll bin/
+
+# Build Oats
+################################################################################
+
+echo 'using System;' > assembly.cs
+echo 'using System.Reflection;' >> assembly.cs
+echo 'using System.Runtime.CompilerServices;' >> assembly.cs
+echo '[assembly:AssemblyTitle ("Oats")]' >> assembly.cs
+echo '[assembly:AssemblyDescription ("C# binary serialisation library.")]' >> assembly.cs
+echo '[assembly:AssemblyCopyright ("Ash Pook")]' >> assembly.cs
+echo '[assembly:CLSCompliant (true)]' >> assembly.cs
+echo '[assembly: AssemblyVersion ("0.9.1")]' >> assembly.cs
 
 mcs \
 -unsafe \
@@ -13,9 +25,16 @@ mcs \
 -define:DEBUG \
 -out:bin/oats.dll \
 -target:library \
+-recurse:assembly.cs \
 -recurse:source/oats/src/main/cs/*.cs \
 /doc:bin/oats.xml \
 -lib:bin/
+
+rm assembly.cs
+
+
+# Build Tests
+################################################################################
 
 
 mcs \
@@ -24,8 +43,7 @@ mcs \
 -define:DEBUG \
 -out:bin/oats.test.dll \
 -target:library \
--recurse:source/oats/src/test/cs/*.cs \
--lib:bin/ \
--lib:packages/NUnit.2.6.4/lib \
 -reference:oats.dll \
--reference:nunit.framework.dll
+-reference:nunit.framework.dll \
+-recurse:source/oats/src/test/cs/*.cs \
+-lib:bin/

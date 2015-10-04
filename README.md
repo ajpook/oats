@@ -1,14 +1,13 @@
 ## Oats
 
 [![Build Status](https://travis-ci.org/sungiant/oats.png?branch=master)](https://travis-ci.org/sungiant/oats)
-[![Gitter](https://img.shields.io/badge/gitter-join%20chat-green.svg)](https://gitter.im/sungiant/oats?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/sungiant/oats/master/LICENSE)
 [![Nuget Version](https://img.shields.io/nuget/v/Oats.svg)](https://www.nuget.org/packages/Oats)
 [![Nuget Downloads](https://img.shields.io/nuget/dt/Oats.svg)](https://www.nuget.org/packages/Oats)
 
 ## Overview
 
-Oats is an explicit serialisation library for .NET and Mono.
+Oats is an explicit binary serialisation library for .NET and Mono.
 
 ## Getting Started
 

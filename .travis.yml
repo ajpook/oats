@@ -7,4 +7,3 @@ before_script:
 script:
   - sh build.sh
   - sh test.sh
-

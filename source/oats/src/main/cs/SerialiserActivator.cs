@@ -1,40 +1,4 @@
-﻿// ┌────────────────────────────────────────────────────────────────────────┐ \\
-// │ ________          __                                                   │ \\
-// │ \_____  \ _____ _/  |_  ______                                         │ \\
-// │  /   |   \\__  \\   __\/  ___/                                         │ \\
-// │ /    |    \/ __ \|  |  \___ \                                          │ \\
-// │ \_______  (____  /__| /____  >                                         │ \\
-// │         \/     \/          \/                                          │ \\
-// │                                                                        │ \\
-// │ An awesome C# serialisation library.                                   │ \\
-// │                                                                        │ \\
-// ├────────────────────────────────────────────────────────────────────────┤ \\
-// │ Copyright © 2012 - 2015 ~ Blimey3D (http://www.blimey3d.com)           │ \\
-// ├────────────────────────────────────────────────────────────────────────┤ \\
-// │ Authors:                                                               │ \\
-// │ ~ Ash Pook (http://www.ajpook.com)                                     │ \\
-// ├────────────────────────────────────────────────────────────────────────┤ \\
-// │ Permission is hereby granted, free of charge, to any person obtaining  │ \\
-// │ a copy of this software and associated documentation files (the        │ \\
-// │ "Software"), to deal in the Software without restriction, including    │ \\
-// │ without limitation the rights to use, copy, modify, merge, publish,    │ \\
-// │ distribute, sublicense, and/or sellcopies of the Software, and to      │ \\
-// │ permit persons to whom the Software is furnished to do so, subject to  │ \\
-// │ the following conditions:                                              │ \\
-// │                                                                        │ \\
-// │ The above copyright notice and this permission notice shall be         │ \\
-// │ included in all copies or substantial portions of the Software.        │ \\
-// │                                                                        │ \\
-// │ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,        │ \\
-// │ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF     │ \\
-// │ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. │ \\
-// │ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY   │ \\
-// │ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,   │ \\
-// │ TORT OR OTHERWISE, ARISING FROM,OUT OF OR IN CONNECTION WITH THE       │ \\
-// │ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 │ \\
-// └────────────────────────────────────────────────────────────────────────┘ \\
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -42,55 +6,55 @@ using System.Linq;
 
 namespace Oats
 {
-	public static class SerialiserActivator
-	{
-		static MethodInfo createSerialiserMethodInfo;
+    public static class SerialiserActivator
+    {
+        static MethodInfo createSerialiserMethodInfo;
 
-		static SerialiserActivator ()
-		{
-			createSerialiserMethodInfo = typeof(SerialiserActivator)
-				.GetMethod ("Create", new Type[]{ });
+        static SerialiserActivator ()
+        {
+            createSerialiserMethodInfo = typeof(SerialiserActivator)
+                .GetMethod ("Create", new Type[]{ });
 
-			if (createSerialiserMethodInfo == null)
-			{
-				throw new Exception (
-					"Failed to find the SerialiserDatabase's " +
-					"RegisterSerialiser method.");    
-			}
-		}
+            if (createSerialiserMethodInfo == null)
+            {
+                throw new Exception (
+                    "Failed to find the SerialiserDatabase's " +
+                    "RegisterSerialiser method.");    
+            }
+        }
 
-		public static Serialiser CreateReflective (Type serialiserType)
-		{
-			try
-			{
-				Type baseType = 
-					serialiserType.BaseType;
+        public static Serialiser CreateReflective (Type serialiserType)
+        {
+            try
+            {
+                Type baseType = 
+                    serialiserType.BaseType;
 
-				Type targetType = 
-					baseType.GetGenericArguments() [0];
+                Type targetType = 
+                    baseType.GetGenericArguments() [0];
 
-				var gmi = createSerialiserMethodInfo
-					.MakeGenericMethod(targetType, serialiserType);
+                var gmi = createSerialiserMethodInfo
+                    .MakeGenericMethod(targetType, serialiserType);
 
 
-				return gmi.Invoke(null, null) as Serialiser;
-			}
-			catch (Exception ex)
-			{
-				throw new Exception (
-					"SerialiserActivator::CreateReflective error: failed to call generic Create " +
-					"method via reflection. --> " + ex.InnerException.Message);
-			}
-		}
+                return gmi.Invoke(null, null) as Serialiser;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception (
+                    "SerialiserActivator::CreateReflective error: failed to call generic Create " +
+                    "method via reflection. --> " + ex.InnerException.Message);
+            }
+        }
 
-		public static Serialiser <TTarget> Create<TTarget, TSerialiser> ()
-		where TSerialiser 
-			: Serialiser <TTarget>
-		{
-			var ats = Activator.CreateInstance (typeof (TSerialiser)) as Serialiser <TTarget>;
+        public static Serialiser <TTarget> Create<TTarget, TSerialiser> ()
+        where TSerialiser 
+            : Serialiser <TTarget>
+        {
+            var ats = Activator.CreateInstance (typeof (TSerialiser)) as Serialiser <TTarget>;
 
-			return ats;
-		}
-	}
+            return ats;
+        }
+    }
 }
 

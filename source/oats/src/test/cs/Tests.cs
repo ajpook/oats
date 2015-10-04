@@ -1,159 +1,139 @@
-﻿// ┌────────────────────────────────────────────────────────────────────────┐ \\
-// │ ________          __                                                   │ \\
-// │ \_____  \ _____ _/  |_  ______                                         │ \\
-// │  /   |   \\__  \\   __\/  ___/                                         │ \\
-// │ /    |    \/ __ \|  |  \___ \                                          │ \\
-// │ \_______  (____  /__| /____  >                                         │ \\
-// │         \/     \/          \/                                          │ \\
-// │                                                                        │ \\
-// │ An awesome C# serialisation library.                                   │ \\
-// │                                                                        │ \\
-// ├────────────────────────────────────────────────────────────────────────┤ \\
-// │ Copyright © 2012 - 2015 ~ Blimey3D (http://www.blimey3d.com)           │ \\
-// ├────────────────────────────────────────────────────────────────────────┤ \\
-// │ Authors:                                                               │ \\
-// │ ~ Ash Pook (http://www.ajpook.com)                                     │ \\
-// ├────────────────────────────────────────────────────────────────────────┤ \\
-// │ Permission is hereby granted, free of charge, to any person obtaining  │ \\
-// │ a copy of this software and associated documentation files (the        │ \\
-// │ "Software"), to deal in the Software without restriction, including    │ \\
-// │ without limitation the rights to use, copy, modify, merge, publish,    │ \\
-// │ distribute, sublicense, and/or sellcopies of the Software, and to      │ \\
-// │ permit persons to whom the Software is furnished to do so, subject to  │ \\
-// │ the following conditions:                                              │ \\
-// │                                                                        │ \\
-// │ The above copyright notice and this permission notice shall be         │ \\
-// │ included in all copies or substantial portions of the Software.        │ \\
-// │                                                                        │ \\
-// │ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,        │ \\
-// │ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF     │ \\
-// │ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. │ \\
-// │ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY   │ \\
-// │ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,   │ \\
-// │ TORT OR OTHERWISE, ARISING FROM,OUT OF OR IN CONNECTION WITH THE       │ \\
-// │ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 │ \\
-// └────────────────────────────────────────────────────────────────────────┘ \\
-
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System;
+using System.Text;
 using Oats;
 using System.IO;
 using System.Collections.Generic;
 
 namespace Oats.Tests
 {
-	[TestFixture]
-	public class Tests
-	{
-		[Test]
-		public void TestCustomStream ()
-		{
-			var exampleShaderDefinition = TestObjects.ShaderSamplerDefinition;
-			Byte[] bytes = null;
+    [TestFixture]
+    public class Tests
+    {
+        [Test]
+        public void TestCustomStream ()
+        {
+            var exampleShaderDefinition = TestObjects.ShaderSamplerDefinition;
+            Byte[] bytes = null;
 
-			using (MemoryStream stream = new MemoryStream ())
-			{
-				using (var channel = new SerialisationChannel <BinaryStreamSerialiser> (
-					stream, ChannelMode.Write))
-				{
-					channel.Write <ShaderSamplerDefinition> (exampleShaderDefinition);
-				}
+            using (MemoryStream stream = new MemoryStream ())
+            {
+                using (var channel = new SerialisationChannel <BinaryStreamSerialiser> (
+                    stream, ChannelMode.Write))
+                {
+                    channel.Write <ShaderSamplerDefinition> (exampleShaderDefinition);
+                }
 
-				bytes = stream.GetBuffer ();
-			}
+                bytes = stream.GetBuffer ();
+            }
 
 
-			using (MemoryStream stream = new MemoryStream (bytes))
-			{
-				using (var channel = new SerialisationChannel <BinaryStreamSerialiser> (
-					stream, ChannelMode.Read))
-				{
-					ShaderSamplerDefinition ssd = channel.Read <ShaderSamplerDefinition> ();
+            using (MemoryStream stream = new MemoryStream (bytes))
+            {
+                using (var channel = new SerialisationChannel <BinaryStreamSerialiser> (
+                    stream, ChannelMode.Read))
+                {
+                    ShaderSamplerDefinition ssd = channel.Read <ShaderSamplerDefinition> ();
 
-					Assert.That (ssd, Is.EqualTo (exampleShaderDefinition));
-				}
-			}
-		}
-
-		[Test]
-		public void TestReadmeExample ()
-		{
-			var obj = TestObjects.ReadmeExample;
-
-			Byte[] bytes = obj.ToBinary <ReadmeExample> ();
-
-			ReadmeExample a = bytes.FromBinary <ReadmeExample> ();
-
-			Assert.That (a, Is.EqualTo (obj));
-		}
-
-		[Test]
-		public void TestShaderSamplerDefinitionSerialiser ()
-		{
-			var obj = TestObjects.ShaderSamplerDefinition;
-
-			Byte[] bytes = obj.ToBinary <ShaderSamplerDefinition> ();
-
-			ShaderSamplerDefinition a = bytes.FromBinary <ShaderSamplerDefinition> ();
-
-			Assert.That (a, Is.EqualTo (obj));
-		}
-
-		[Test]
-		public void TestStringSerialiser ()
-		{
-			String[] tests = new []
-			{
-				null,
-				"hello world",
-				"The quick brown fox jumps over the lazy dog",
-				"זה כיף סתם לשמוע איך תנצח קרפד עץ טוב בגן",
-				"hello\nworld",
-				"hello\\nworld",
-				"私はガラスを食べられます。それは私を傷つけません。"
-			};
-
-			foreach (var testcase in tests)
-			{
-				Byte[] binary = testcase.ToBinary<String> ();
-
-				String result = binary.FromBinary<String> ();
-
-				Assert.That (result, Is.EqualTo (testcase));
-			}
-		}
-
-		[Test]
-		public void TestToChecksum ()
-		{
-			ShaderSamplerDefinition exampleObject = TestObjects.ShaderSamplerDefinition;
-
-			// make a new object
-			Byte[] b = exampleObject.ToBinary<ShaderSamplerDefinition> ();
-			ShaderSamplerDefinition newExampleObject = b.FromBinary<ShaderSamplerDefinition> ();
-
-			// Sanity check
-			Assert.That (newExampleObject, Is.EqualTo (exampleObject));
-
-			// test that both yeild the same checksum
-			Byte[] chk1 = exampleObject.ToChecksum <ShaderSamplerDefinition> ();
-			Byte[] chk2 = newExampleObject.ToChecksum <ShaderSamplerDefinition> ();
-			Assert.That (chk1, Is.EqualTo (chk2));
-
-			// now change the new object a little
-			newExampleObject.Name = "Leeroy Jee-ee-ee-een-kins!";
-
-			// test that the changes yeild a new checksum
-			Byte[] chk3 = newExampleObject.ToChecksum <ShaderSamplerDefinition> ();
-			Assert.That (chk1 != chk3);
-
+                    Assert.That (ssd, Is.EqualTo (exampleShaderDefinition));
+                }
+            }
         }
 
         [Test]
+        public void TestReadmeExample ()
+        {
+            var obj = TestObjects.ReadmeExample;
+
+            Byte[] bytes = obj.ToBinary <ReadmeExample> ();
+
+            ReadmeExample a = bytes.FromBinary <ReadmeExample> ();
+
+            Assert.That (a, Is.EqualTo (obj));
+        }
+
+        [Test]
+        public void TestShaderSamplerDefinitionSerialiser ()
+        {
+            var obj = TestObjects.ShaderSamplerDefinition;
+
+            Byte[] bytes = obj.ToBinary <ShaderSamplerDefinition> ();
+
+            ShaderSamplerDefinition a = bytes.FromBinary <ShaderSamplerDefinition> ();
+
+            Assert.That (a, Is.EqualTo (obj));
+        }
+
+        [Test]
+        public void TestStringSerialiser ()
+        {
+            String[] tests = new []
+            {
+                null,
+                "hello world",
+                "The quick brown fox jumps over the lazy dog",
+                "זה כיף סתם לשמוע איך תנצח קרפד עץ טוב בגן",
+                "hello\nworld",
+                "hello\\nworld",
+                "私はガラスを食べられます。それは私を傷つけません。"
+            };
+
+            foreach (var testcase in tests)
+            {
+                Byte[] binary = testcase.ToBinary<String> ();
+
+                String result = binary.FromBinary<String> ();
+
+                Assert.That (result, Is.EqualTo (testcase));
+                /*
+                if (testcase != null)
+                {
+                    Byte[] utf8 = Encoding.UTF8.GetBytes (testcase);
+                    Assert.That (binary.Length, Is.EqualTo (sizeof(uint) + utf8.Length));
+                    Assert.That (binary.Length, Is.EqualTo (sizeof(uint) + utf8.Length));
+                }*/
+            }
+        }
+
+        [Test]
+        public void TestToChecksum ()
+        {
+            ShaderSamplerDefinition exampleObject = TestObjects.ShaderSamplerDefinition;
+
+            // make a new object
+            Byte[] b = exampleObject.ToBinary<ShaderSamplerDefinition> ();
+            ShaderSamplerDefinition newExampleObject = b.FromBinary<ShaderSamplerDefinition> ();
+
+            // Sanity check
+            Assert.That (newExampleObject, Is.EqualTo (exampleObject));
+
+            // test that both yeild the same checksum
+            Byte[] chk1 = exampleObject.ToChecksum <ShaderSamplerDefinition> ();
+            Byte[] chk2 = newExampleObject.ToChecksum <ShaderSamplerDefinition> ();
+            Assert.That (chk1, Is.EqualTo (chk2));
+
+            // now change the new object a little
+            newExampleObject.Name = "Leeroy Jee-ee-ee-een-kins!";
+
+            // test that the changes yeild a new checksum
+            Byte[] chk3 = newExampleObject.ToChecksum <ShaderSamplerDefinition> ();
+            Assert.That (chk1 != chk3);
+
+        }
+
+        /*  Not yet supported.
+        [Test]
         public void TestMultidimensionalArray ()
         {
-            Int32[,,] array3d = new Int32[2, 2, 3] { { { 1, 2, 3 }, { 4, 5, 6 } }, 
-                { { 7, 8, 9 }, { 10, 11, 12 } } };
+            Int32[,,] array3d = new Int32[2, 2, 3]
+            {
+                {
+                    { 1, 2, 3 }, { 4, 5, 6 }
+                }, 
+                {
+                    { 7, 8, 9 }, { 10, 11, 12 }
+                }
+            };
 
             Byte [] binary = array3d.ToBinary <Int32[,,]> ();
 
@@ -165,11 +145,12 @@ namespace Oats.Tests
                 {
                     for (Int32 k = 0; k < 3; ++k)
                     {
-                        Assert.That (array3d [i,j,k] == result [i,j,k]);
+                        Assert.That (array3d [i, j, k] == result [i, j, k]);
                     }
                 }
             }
         }
+        */
 
         [Test]
         public void TestJaggedArray ()
@@ -194,22 +175,22 @@ namespace Oats.Tests
             }
         }
 
-		[Test]
-		public void TestAutoRegisterListSerialiser ()
-		{
-			var lst = new List <Animal> ()
-			{
-				new Mammel (),
-				new Animal (),
-				new Animal ()
-			};
+        [Test]
+        public void TestAutoRegisterListSerialiser ()
+        {
+            var lst = new List <Animal> ()
+            {
+                new Mammel (),
+                new Animal (),
+                new Animal ()
+            };
 
-			Byte [] binary = lst.ToBinary <List <Animal>> ();
+            Byte [] binary = lst.ToBinary <List <Animal>> ();
 
-			List <Animal> results = binary.FromBinary <List <Animal>> ();
+            List <Animal> results = binary.FromBinary <List <Animal>> ();
 
-			Assert.That (results.Count == lst.Count);
-		}
+            Assert.That (results.Count == lst.Count);
+        }
 
         [Test]
         public void TestNormalValueArray ()
@@ -226,77 +207,77 @@ namespace Oats.Tests
             }
         }
 
-		[Test]
-		public void TestArraySerialiserPolymorphic ()
-		{
-			var animal = new Animal ();
-			animal.AnimalString = "animal";
+        [Test]
+        public void TestArraySerialiserPolymorphic ()
+        {
+            var animal = new Animal ();
+            animal.AnimalString = "animal";
 
-			var mammel = new Mammel ();
-			mammel.AnimalString = "mammel.animal";
-			mammel.MammelString = "mammel";
+            var mammel = new Mammel ();
+            mammel.AnimalString = "mammel.animal";
+            mammel.MammelString = "mammel";
 
-			var bear = new Bear ();
-			bear.AnimalString = "bear.mammel.animal";
-			bear.MammelString = "bear.mammel";
-			bear.BearString = "bear";
+            var bear = new Bear ();
+            bear.AnimalString = "bear.mammel.animal";
+            bear.MammelString = "bear.mammel";
+            bear.BearString = "bear";
 
-			var boar = new Boar ();
-			boar.AnimalString = "boar.mammel.animal";
-			boar.MammelString = "boar.mammel";
-			boar.BoarString = "boar";
+            var boar = new Boar ();
+            boar.AnimalString = "boar.mammel.animal";
+            boar.MammelString = "boar.mammel";
+            boar.BoarString = "boar";
 
-			Animal[] animals = new Animal []
-			{
-				animal,
-				mammel,
-				bear,
-				null,
-				boar,
-				null
-			};
+            Animal[] animals = new Animal []
+            {
+                animal,
+                mammel,
+                bear,
+                null,
+                boar,
+                null
+            };
 
-			Byte [] binary = animals.ToBinary <Animal[]> ();
+            Byte [] binary = animals.ToBinary <Animal[]> ();
 
-			Animal[] results = binary.FromBinary<Animal[]> ();
+            Animal[] results = binary.FromBinary<Animal[]> ();
 
-			for (int i = 0; i < animals.Length; ++i)
-			{
-				if (animals [i] != null)
-				{
-					Assert.That (results [i] != null);
-					Assert.That (animals [i].AnimalString, Is.EqualTo (results [i].AnimalString));
+            for (int i = 0; i < animals.Length; ++i)
+            {
+                if (animals [i] != null)
+                {
+                    Assert.That (results [i] != null);
+                    Assert.That (animals [i].AnimalString, Is.EqualTo (results [i].AnimalString));
 
-					if (animals [i] is Mammel)
-					{
-						Assert.That (
-							(animals [i] as Mammel).MammelString, 
-							Is.EqualTo (
-								(results [i] as Mammel).MammelString));
-					}
+                    if (animals [i] is Mammel)
+                    {
+                        Assert.That (
+                            (animals [i] as Mammel).MammelString, 
+                            Is.EqualTo (
+                                (results [i] as Mammel).MammelString));
+                    }
 
-					if (animals [i] is Bear)
-					{
-						Assert.That (
-							(animals [i] as Bear).BearString, 
-							Is.EqualTo (
-								(results [i] as Bear).BearString));
-					}
+                    if (animals [i] is Bear)
+                    {
+                        Assert.That (
+                            (animals [i] as Bear).BearString, 
+                            Is.EqualTo (
+                                (results [i] as Bear).BearString));
+                    }
 
-					if (animals [i] is Boar)
-					{
-						Assert.That (
-							(animals [i] as Boar).BoarString, 
-							Is.EqualTo (
-								(results [i] as Boar).BoarString));
-					}
-				}
-				else
-				{
-					Assert.That (results [i] == null);
-				}
-			}
-		}
-	}
+                    if (animals [i] is Boar)
+                    {
+                        Assert.That (
+                            (animals [i] as Boar).BoarString, 
+                            Is.EqualTo (
+                                (results [i] as Boar).BoarString));
+                    }
+                }
+                else
+                {
+                    Assert.That (results [i] == null);
+                }
+            }
+        }
+    }
 }
 
