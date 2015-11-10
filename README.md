@@ -22,8 +22,9 @@ Oats is available as a stand-alone library via **[nuget][oats_nuget]**.  Here's 
 
 ## Why?
 
-...
+Oats is a minimal libary for binary serialisation, given it's explict nature, it's well suited to scenarios where one needs exact control over the bytes that are serialised.
 
+My personal use case for developing the libary came about whilst developing a deterministic network simulation backend for a League of Legends style demo (not open source); each client used Oats to serialise commands which get sent to a centralised server, the server verifies and sequences all commands and then send down authorative command sequences for each client to deserialise and replay.
 
 ## Using Oats
 
