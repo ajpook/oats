@@ -4,7 +4,8 @@
   "description": "Oats ~ An explicit serialisation library.",
   "copyright": "Ash Pook",
   "config": {
-    "compiler": "mcs"
+    "compiler": "mcs",
+    "framework": "4.5"
   },
   "packages": [
     { "id": "NUnit", "version": "2.6.4" },
@@ -15,18 +16,16 @@
     "release": {},
     "final":   { "defines": [ "FINAL" ], "optimize": true }
   },
-  "default_variant": "release",
-  "target_config": {
+  "targets": {
     "any":     {},
     "xios":    { "defines": [ "PLATFORM_API_XAMARIN_IOS_APP" ] },
     "mmac":    { "defines": [ "PLATFORM_API_MONOMAC_APP" ] },
     "otk":     { "defines": [ "XNA4" ] }
   },
-  "default_target": "any",
   "projects": [
     {
       "output": "oats",
-      "references": [],
+      "references": [ "System", "System.Core" ],
       "sources": [ "source/oats/src/main/*.cs" ],
       "target": "library",
       "clscheck": true,
@@ -34,7 +33,7 @@
     },
     {
       "output": "oats.test",
-      "references": [ "nunit.framework", "oats" ],
+      "references": [ "System", "System.Core", "nunit.framework", "oats" ],
       "sources": [ "source/oats/src/test/*.cs" ],
       "target": "library",
       "test_runner": "nunit-console.exe"
