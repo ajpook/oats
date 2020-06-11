@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/sungiant/oats.png?branch=master)](https://travis-ci.org/sungiant/oats)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/sungiant/oats/master/LICENSE)
 [![Nuget Version](https://img.shields.io/nuget/v/Oats.svg)](https://www.nuget.org/packages/Oats)
+[![Nuget Downloads](https://img.shields.io/nuget/dt/Oats)][nuget]
 
 ## Overview
 
