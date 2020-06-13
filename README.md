@@ -176,7 +176,7 @@ Example a = bytes.FromBinary <Example> ();
 
 ## License
 
-Oats is licensed under the **[MIT License][mit]**; you may not use this software except in compliance with the License.
+Oats is licensed under the **[MIT License][license]**; you may not use this software except in compliance with the License.
 
 [license]: https://raw.githubusercontent.com/sungiant/oats/master/LICENSE
 [nuget]: https://www.nuget.org/packages/Oats/
