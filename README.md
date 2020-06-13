@@ -20,7 +20,7 @@ and this:
 ```cs
 MyClass myObj = bytes.FromBinary <MyClass> ();
 ```
-The primary rationale for Oats it to allow for explict user control over how a given class gets serialised to and from binary.
+The primary rationale for Oats it to allow for explict user control over how a given `class` or `struct` gets serialised to and from binary.
 
 ## Getting Started
 
