@@ -12,7 +12,7 @@ Oats is an explicit binary serialisation library for .NET and Mono.
 With a little setup Oats can do this:
 
 ```cs
-Byte[] bytes = ((object) obj).ToBinary <MyClass> ();
+byte[] bytes = ((object) myObj).ToBinary <MyClass> ();
 ```
 
 and this:
