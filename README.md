@@ -9,6 +9,19 @@
 
 Oats is an explicit binary serialisation library for .NET and Mono.
 
+With a little setup Oats can do this:
+
+```cs
+Byte[] bytes = example.ToBinary <MyClass> ();
+```
+
+and this:
+
+```cs
+Example a = bytes.FromBinary <MyClass> ();
+```
+The primary rationale for Oats it to allow for explict user control over how a given class gets serialised to and from binary.
+
 ## Getting Started
 
 Oats is available as a stand-alone library via **[nuget][nuget]**.  Here's an example nuget `packages.config` file that pulls in Oats:
