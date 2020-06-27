@@ -1,4 +1,4 @@
-## Oats
+## Oats :fallen_leaf:
 
 [![Build Status](https://img.shields.io/travis/sungiant/oats)][travis]
 [![License](https://img.shields.io/github/license/sungiant/oats)][license]
