@@ -1,6 +1,6 @@
 ## Oats
 
-[![Build Status](https://travis-ci.org/sungiant/oats.png?branch=master)][travis]
+[![Build Status](https://img.shields.io/travis/sungiant/oats)][travis]
 [![License](https://img.shields.io/github/license/sungiant/oats)][license]
 [![Nuget Version](https://img.shields.io/nuget/v/Oats.svg)][nuget]
 [![Nuget Downloads](https://img.shields.io/nuget/dt/Oats)][nuget]
